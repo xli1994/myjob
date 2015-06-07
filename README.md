@@ -10,4 +10,6 @@ For job seekers: view cuurent job posting,  apply job and upload resume, search 
 Technologies used in this project are: JEE 7, JDK 1.8, JSF 2.2, Primefaces 5.1, JPA 2.1 with Hibernate implementation 4.3.8, 
 Solr 5.0 for job search. Database is MySQL 5.6. Application server is Tomcat 8.0.18.
 
+Source codes are in branch "lxs1"
+
 See detail in wiki page: https://github.com/xli1994/myjob/wiki/MyJob:-A-Job-Posting-Management-Web-Application
