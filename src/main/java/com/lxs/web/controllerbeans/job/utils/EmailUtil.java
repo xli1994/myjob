@@ -28,10 +28,9 @@ public class EmailUtil
 	private static final Logger logger = LogManager.getLogger(EmailUtil.class);
 			
 	//comcast account: works
-	private static final String username = "xiaosongli2@comcast.net";//change accordingly
-	private static final String password = "Lxslxs11";//change accordingly
-	// Assuming you are sending email through comcast
-	//private static final String from = "xiaosongli2@comcast.net";
+	private static final String username = "xxxxx@xxxxx.com";//change accordingly
+	private static final String password = "xxxxxxx";//change accordingly
+
 	private static String host = "smpt.comcast.net";
 
 	private static Properties props = new Properties();
