@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<div id="public-job-list">
+
+		<c:if test="#{empty searchJobBean.jobList}">
+			<p>There is no result for search criteria <span style="font-weight: bold;">#{param['query']}</span></p>
+		</c:if>
+
+		<c:if test="#{not empty searchJobBean.jobList}">
+			<p>There are #{searchJobBean.listSize} results for search criteria <span style="font-weight: bold;">#{param['query']}</span></p>
+			
+			<h:form id="myJobList">
+				<h:dataTable value="#{searchJobBean.jobList}" var="jobEntity"
+					styleClass="jobListTable" headerClass="jobListTableHeader"
+					rowClasses="jobListTableOddRow,jobListTableEvenRow"
+					captionClass="jobListTableCaption">
+
+					<f:facet name="caption">
+						<h:outputText value="Search Results" />
+					</f:facet>
+
+					<h:column>
+						<f:facet name="header">Job Title</f:facet>
+						<h:link value="#{jobEntity.jobTitle}" outcome="#{searchJobBean.viewJobPage}">
+							<f:param name="jobId" value="#{jobEntity.jobId}" />
+						</h:link>
+					</h:column>
+
+					<c:if test="#{searchJobBean.admin}">
+					<h:column>
+						<f:facet name="header">
+							Active Status		
+						</f:facet>
+						
+					<h:outputText value="Active" rendered="#{jobEntity.activeStatus}" />
+					<h:outputText value="Inactive" rendered="#{not jobEntity.activeStatus}" />
+					
+					</h:column>
+					</c:if>
+					
+					<h:column>
+						<f:facet name="header">
+								
+									Job Type
+								
+							</f:facet>
+						<h:outputText value="#{jobEntity.jobType}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+								
+									Location
+								
+							</f:facet>
+						<h:outputText value="#{jobEntity.location}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+								
+									Post Date
+								
+							</f:facet>
+
+						<h:outputText value="#{jobEntity.createdDate}">
+							<f:convertDateTime pattern="MM/dd/yyyy" />
+						</h:outputText>
+					</h:column>
+
+					<h:column>
+						<f:facet name="header"></f:facet>
+						<h:link value="Job Detail" outcome="#{searchJobBean.viewJobPage}">
+							<f:param name="jobId" value="#{jobEntity.jobId}" />
+						</h:link>
+					</h:column>
+
+				</h:dataTable>
+
+				<br />
+
+
+			</h:form>
+		</c:if>
+	</div>
+
+</h:body>
+
+</html>

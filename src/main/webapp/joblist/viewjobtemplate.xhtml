@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<div id="view-job">
+
+		<!-- This is preview from add/edit page -->
+		<c:if test="#{not empty requestScope['jobEntity']}">
+			<c:set var="jobview" value="#{requestScope['jobEntity']}" />
+		</c:if>
+
+		<!-- This is for formal view -->
+		<c:if test="#{empty requestScope['jobEntity']}">
+			<c:set var="jobview" value="#{viewJobBean.jobEntity}" />
+		</c:if>
+
+		<div class="wrapper">
+
+			<h2>#{jobview.jobTitle}</h2>
+
+			<div style="text-align: right;">
+			<c:if test="#{jobview.jobId > 0 and viewJobBean.allowEdit}">
+				<h:link value="Edit" outcome="/jobadmin/addeditjob"
+					styleClass="btn btn-info" style="display: inline-block;">
+					<f:param name="jobId" value="#{jobview.jobId}" />
+				</h:link>
+					&nbsp;&nbsp;
+			</c:if>
+			
+			<c:if test="#{jobview.jobId > 0 and jobview.activeStatus}">
+				<h:link value="Apply" outcome="/joblist/apply"
+					styleClass="btn btn-success" style="float:right;display: inline;">
+					<f:param name="jobId" value="#{jobview.jobId}" />
+				</h:link>
+			</c:if>
+			</div>
+			
+			<p>
+				<span>Location: </span>#{jobview.location} &nbsp;&nbsp;&nbsp; <span>Job
+					Type: </span>#{jobview.jobType} &nbsp;&nbsp;&nbsp;
+				<c:if
+					test="#{jobview.jobType ne 'Full Time' and (not empty jobview.contractDuration)}">
+					<span>Duration: </span>#{jobview.contractDuration}
+						</c:if>
+			</p>
+
+			<div class="cleared"></div>
+			<p>
+				<c:if test="#{not empty jobview.jobNumber }">
+					<span>Job Code: </span>#{jobview.jobNumber} &nbsp;&nbsp;&nbsp;
+						</c:if>
+				<c:if test="#{not empty jobview.jobCategory }">
+					<span>Job Category: </span>#{jobview.jobCategory} &nbsp;&nbsp;&nbsp;
+						</c:if>
+				<c:if test="#{not empty jobview.createdDate }">
+					<span>Posted Date: </span>
+					<h:outputText value="#{jobview.createdDate}">
+						<f:convertDateTime pattern="MM/dd/yyyy" />
+					</h:outputText>
+				</c:if>
+			</p>
+		</div>
+
+		<c:if test="#{not empty jobview.aboutCompany }">
+			<c:set var="comp11" value="${fn:split(jobview.aboutCompany, '%%%')}" />
+			<div class="wrapper">
+				<div class="caption">About Company:</div>
+				<div>
+					<c:forEach items="#{comp11}" var="comp" varStatus="theCount">
+						<c:if test="#{not empty fn:trim(comp)}">
+							#{comp}
+							<br />
+							<br />
+						</c:if>
+					</c:forEach>
+				</div>
+				<div class="cleared"></div>
+			</div>
+		</c:if>
+
+		<c:set var="desc11" value="${fn:split(jobview.jobDesc, '%%%')}" />
+		<div class="wrapper">
+			<div class="caption">Job Description:</div>
+			<div>
+				<c:forEach items="#{desc11}" var="desc">
+					<c:if test="#{not empty fn:trim(desc)}">
+							#{desc}
+							<br />
+						<br />
+					</c:if>
+				</c:forEach>
+			</div>
+			<div class="cleared"></div>
+		</div>
+
+		<c:if test="#{not empty jobview.responsibility}">
+			<div class="wrapper">
+				<div class="caption">Responsibilities:</div>
+				<c:set var="resp11"
+					value="${fn:split(jobview.responsibility, '%%%')}" />
+				<div>
+					<ul>
+						<c:forEach items="#{resp11}" var="resp">
+							<c:if test="#{not empty fn:trim(resp)}">
+								<li>#{resp}</li>
+							</c:if>
+						</c:forEach>
+					</ul>
+				</div>
+				<div class="cleared"></div>
+			</div>
+		</c:if>
+
+
+		<div class="wrapper">
+			<div class="caption">Qualifications:</div>
+			<c:set var="qual11" value="${fn:split(jobview.qualification, '%%%')}" />
+			<div>
+				<ul>
+					<c:forEach items="#{qual11}" var="qual">
+						<c:if test="#{not empty fn:trim(qual)}">
+							<li>#{qual}</li>
+						</c:if>
+					</c:forEach>
+				</ul>
+			</div>
+			<div class="cleared"></div>
+		</div>
+
+		<c:if test="#{not empty jobview.education }">
+			<div class="wrapper">
+				<div class="caption">Education:</div>
+				<div>#{jobview.education}</div>
+				<div class="cleared"></div>
+			</div>
+		</c:if>
+
+		<c:if test="#{not empty jobview.preferredSkill}">
+			<div class="wrapper">
+				<div class="caption">Preferred Skills:</div>
+				<c:set var="pref11"
+					value="${fn:split(jobview.preferredSkill, '%%%')}" />
+				<div>
+					<ul>
+						<c:forEach items="#{pref11}" var="pref">
+							<c:if test="#{not empty fn:trim(pref)}">
+								<li>#{pref}</li>
+							</c:if>
+						</c:forEach>
+					</ul>
+				</div>
+				<div class="cleared"></div>
+			</div>
+		</c:if>
+
+
+		<c:if test="#{not empty jobview.benefit}">
+			<div class="wrapper">
+				<div class="caption">Benefits</div>
+				<c:set var="bene11" value="${fn:split(jobview.benefit, '%%%')}" />
+				<div>
+					<ul>
+						<c:forEach items="#{bene11}" var="bene">
+							<c:if test="#{not empty fn:trim(bene)}">
+								<li>#{bene}</li>
+							</c:if>
+						</c:forEach>
+					</ul>
+				</div>
+				<div class="cleared"></div>
+			</div>
+		</c:if>
+
+		<c:if test="#{not empty jobview.note }">
+			<c:set var="note11" value="${fn:split(jobview.note, '%%%')}" />
+			<div class="wrapper">
+				<div class="caption">Notes:</div>
+				<div>
+					<c:forEach items="#{note11}" var="note">
+						<c:if test="#{not empty fn:trim(note)}">
+								#{note}
+								<br />
+							<br />
+						</c:if>
+					</c:forEach>
+				</div>
+				<div class="cleared"></div>
+			</div>
+		</c:if>
+
+		<hr />
+
+		<div class="wrapper">
+			<div style="text-align: right;">
+				<!--  not working
+						<h:outputLink value="javascript:closeWindow();">
+							<h:outputText value="Close Window" />
+						</h:outputLink>
+						-->
+				<c:if test="#{jobview.jobId > 0 and viewJobBean.allowEdit}">
+					<h:link value="Edit" outcome="/jobadmin/addeditjob"
+						styleClass="btn btn-info" style="display: inline-block;">
+						<f:param name="jobId" value="#{jobview.jobId}" />
+					</h:link>
+					&nbsp;&nbsp;
+				</c:if>
+
+				<c:if test="#{jobview.jobId > 0 and jobview.activeStatus}">
+					<h:link value="Apply" outcome="/joblist/apply"
+						styleClass="btn btn-success"
+						style="float:right;display: inline-block;">
+						<f:param name="jobId" value="#{jobview.jobId}" />
+					</h:link>
+				</c:if>
+			</div>
+		</div>
+
+
+	</div>
+
+</h:body>
+
+</html>
