@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition template="../templates/job/commonadmin.xhtml">
+		<!-- pass parameter -->
+		<ui:param name="title" value="Forward To" />
+
+		<ui:define name="content">
+			<div id="forward-to">
+
+
+				<div class="wrapper">
+					<h3>Forward</h3>
+					<p>
+						<span>Applicant full name:
+							#{viewProfileBean.appEntity.firstName}
+							#{viewProfileBean.appEntity.lastName}</span>&nbsp;&nbsp; <span>Applied
+							for #{viewProfileBean.jobTitle}</span> &nbsp;&nbsp; <span>Job
+							Code: #{viewProfileBean.jobNumber}</span>
+					</p>
+				</div>
+
+				<h:form id="forwardForm">
+
+					<div class="wrapper">
+						<p>
+							<h:outputLabel for="recipients" value="Forward To: "
+								styleClass="required caption" />
+							(use comma to separate email address)
+						</p>
+						<p>
+							<h:inputText id="recipients" size="45" maxlength="100"
+								styleClass="content" validatorMessage="Forward To is required"
+								required="true" requiredMessage="Forward To is required"
+								value="#{viewProfileBean.recipients}">
+								<f:validateLength minimum="2" maximum="100" />
+							</h:inputText>
+						</p>
+
+						<h:message for="recipients" styleClass="requiredMsg" />
+					</div>
+
+					<div class="wrapper">
+						<p>
+							<h:outputLabel for="cc" value="CC: " styleClass="caption" />
+						</p>
+						<p>
+							<h:inputText id="cc" size="45" maxlength="100"
+								styleClass="content" value="#{viewProfileBean.cc}">
+							</h:inputText>
+						</p>
+						<h:message for="cc" styleClass="requiredMsg" />
+					</div>
+
+					<div class="wrapper">
+						<p>
+							<h:outputLabel for="senderEmail" value="Your Email: "
+								styleClass="required caption" />
+						</p>
+						<p>
+							<h:inputText id="senderEmail" size="45" maxlength="100"
+								styleClass="content" required="true"
+								requiredMessage="Your email is required"
+								value="#{viewProfileBean.senderEmail}">
+								<f:validator validatorId="emailValidator" />
+							</h:inputText>
+						</p>
+						<h:message for="senderEmail" styleClass="requiredMsg" />
+					</div>
+
+					<div class="wrapper">
+						<p>
+							<h:selectBooleanCheckbox value="#{viewProfileBean.attachResume}" />
+							Attach Resume
+						</p>
+					</div>
+
+					<div class="wrapper">
+						<p>
+							<h:outputLabel for="subject" value="Subject: "
+								styleClass="required caption" />
+						</p>
+						<p>
+							<h:inputText id="subject" size="45" maxlength="100"
+								styleClass="content" required="true"
+								requiredMessage="Subject is required"
+								value="#{viewProfileBean.subject}">
+								<f:validateLength minimum="2" maximum="100" />
+							</h:inputText>
+						</p>
+						<h:message for="subject" styleClass="requiredMsg" />
+					</div>
+					
+					<div class="wrapper">
+						<p>
+							<h:outputLabel for="content" value="Content: "
+								styleClass="required caption" />
+						</p>
+						<p>
+							<h:inputTextarea rows="8" cols="61" id="content" maxlength="500"
+								required="true" requiredMessage="Content is required"
+								validatorMessage="Maximum length is 500 characters"
+								value="#{viewProfileBean.content}">
+								<f:validateLength maximum="500" />
+							</h:inputTextarea>
+						</p>
+						<h:message for="content" styleClass="requiredMsg" />
+					</div>
+
+					<br />
+
+					<div class="wrapper">
+						<div>
+							&nbsp;&nbsp;
+						<c:if test="#{empty viewProfileBean.queryApp}">
+							<!--  back to application list page -->
+							<h:link value="Back To Application List" outcome="/jobadmin/applicationlist"
+								styleClass="btn btn-primary" style="display: inline-block;">
+								<f:param name="jobId" value="#{viewProfileBean.jobId}" />
+								<f:param name="jobTitle" value="#{viewProfileBean.jobTitle}" />
+								<f:param name="jobNumber" value="#{viewProfileBean.jobNumber}" />
+							</h:link>
+
+							&nbsp;&nbsp;
+								<h:link value="Back To Applicant Profile" outcome="/jobadmin/applicantprofile"
+									styleClass="btn btn-info"
+									style="display: inline-block;">
+									<f:param name="jobId" value="#{viewProfileBean.jobId}" />
+									<f:param name="appId"
+										value="#{viewProfileBean.appEntity.appId}" />
+									<f:param name="jobTitle"
+										value="#{viewProfileBean.jobTitle}" />
+									<f:param name="jobNumber"
+										value="#{viewProfileBean.jobNumber}" />
+								</h:link>
+							</c:if>
+							
+							<c:if test="#{not empty viewProfileBean.queryApp}">
+							<!--  back to search applicant result page -->
+							<h:link value="Back To Search Result"
+								outcome="/jobadmin/searchapplicants" styleClass="btn btn-info"
+								style="display: inline-block;margin-left:400px;">
+								<f:param name="queryApp" value="#{viewProfileBean.queryApp}" />
+							</h:link>
+							</c:if>	
+							
+								&nbsp;&nbsp;
+							<h:commandButton value="Send"
+								styleClass="btn btn-success" action="#{viewProfileBean.forward}"
+								style="display: inline-block;">
+								
+							</h:commandButton>
+						</div>
+					</div>
+				</h:form>
+
+			</div>
+
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

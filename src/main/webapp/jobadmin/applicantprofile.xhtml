@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition template="../templates/job/commonadmin.xhtml">
+		<!-- pass parameter -->
+		<ui:param name="title" value="Applicant Profile" />
+
+		<ui:define name="content">
+
+			<div id="applicant-profile">
+
+				<h:form id="applicantProfile">
+					<!-- current login user, hardcode for now -->
+					<h:inputHidden value="#{viewProfileBean.currentViewer}"
+						id="currentViewer" />
+
+					<div class="wrapper">
+						<h3>Applicant Profile</h3>
+						<p>
+							Applied for <span>#{viewProfileBean.jobTitle}</span>
+							&nbsp;&nbsp;&nbsp; Job Code: <span>#{viewProfileBean.jobNumber}</span>
+							&nbsp;&nbsp;&nbsp; Applied Date: 
+							<span> 
+								<h:outputText
+									value="#{viewProfileBean.appEntity.appliedDate}">
+									<f:convertDateTime pattern="MM/dd/yyyy" />
+								</h:outputText>
+							</span>
+
+						</p>
+						<hr />
+					</div>
+
+					<div class="wrapper">
+						<div class="col13">Resume:</div>
+						<p>
+							<p:commandButton value="Download" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								icon="ui-icon-arrowthick-1-s">
+								<p:fileDownload value="#{viewProfileBean.downloadResume()}" />
+							</p:commandButton>
+							&nbsp;&nbsp;
+
+							<c:if
+								test="${not fn:containsIgnoreCase(viewProfileBean.appEntity.resumeName, '.doc')}">
+								<h:commandLink value="Open file in browser"
+									styleClass="btn btn-primary"
+									action="#{viewProfileBean.openFileToBrowser()}" target="_blank" />
+							</c:if>
+						</p>
+					</div>
+					<br></br>
+
+
+					<div class="wrapper content">
+						<div class="col13">Full Name:</div>
+						<div class="col2">#{viewProfileBean.appEntity.firstName}
+							#{viewProfileBean.appEntity.lastName}</div>
+
+						<div class="col13">Email:</div>
+						<div class="last">
+							<a
+								href="mailto:#{viewProfileBean.appEntity.email}?subject=Re:#{viewProfileBean.jobTitle}">
+								#{viewProfileBean.appEntity.email} &nbsp; (Reply)</a>
+						</div>
+
+					</div>
+
+					<div class="wrapper content evenrow">
+						<div class="col13">Address:</div>
+						<div class="col2">#{viewProfileBean.appEntity.address}&nbsp;</div>
+
+						<div class="col13">City:</div>
+						<div class="last">#{viewProfileBean.appEntity.city}&nbsp;</div>
+					</div>
+
+					<div class="wrapper content">
+						<div class="col13">State &amp; Zip:</div>
+						<div class="col2">#{viewProfileBean.appEntity.state}
+							&nbsp;&nbsp; #{viewProfileBean.appEntity.zipcode}</div>
+
+						<div class="col13">County:</div>
+						<div class="last">#{viewProfileBean.appEntity.country}&nbsp;</div>
+					</div>
+
+					<div class="wrapper content evenrow">
+						<div class="col13">Phone:</div>
+						<div class="col2">#{viewProfileBean.appEntity.phone}&nbsp;</div>
+
+						<div class="col13">Cell Phone:</div>
+						<div class="last">#{viewProfileBean.appEntity.cellPhone}&nbsp;</div>
+					</div>
+
+					<div class="wrapper content ">
+						<div class="col13">Website:</div>
+						<div class="col2">#{viewProfileBean.appEntity.website}&nbsp;</div>
+
+						<div class="col13">&nbsp;</div>
+						<div class="last">&nbsp;</div>
+					</div>
+
+					<div class="wrapper content evenrow">
+						<div class="col13">Work Status:</div>
+						<div class="col2">#{viewProfileBean.appEntity.workStatus}&nbsp;</div>
+
+						<div class="col13">Gender:</div>
+						<div class="last">#{viewProfileBean.appEntity.gender}&nbsp;</div>
+					</div>
+
+					<div class="wrapper content">
+						<div class="col13">Race:</div>
+						<div class="col2">#{viewProfileBean.appEntity.race}&nbsp;</div>
+
+						<div class="col13">Veteran Status:</div>
+						<div class="last">#{viewProfileBean.appEntity.veteranStatus}&nbsp;</div>
+					</div>
+
+					<c:if test="#{not empty viewProfileBean.appEntity.coverLetter}">
+						<div class="wrapper">
+							<div class="col13">Cover Letter:</div>
+							<div class="coverletter">
+
+								<c:set var="cov11"
+									value="${fn:split(viewProfileBean.appEntity.coverLetter, '%%%')}" />
+								<c:forEach items="#{cov11}" var="cov" varStatus="theCount">
+									<c:if test="#{not empty fn:trim(cov)}">
+									#{cov}
+									<br />
+										<br />
+									</c:if>
+								</c:forEach>
+
+								&nbsp;
+							</div>
+						</div>
+					</c:if>
+
+					<div class="wrapper">
+						<hr />
+					</div>
+
+					<!--  Status and comment section  -->
+					<div class="wrapper" id="displayStatus">
+						<div class="update1">Application Status:</div>
+						<div class="update2" id="statusNew">
+							<h:outputText id="outputstatus"
+								value="#{viewProfileBean.appEntity.status}" />
+						</div>
+
+						<div class="update3">
+							Comments <br></br>(by <span id="updatedBy">#{viewProfileBean.appEntity.commentedBy}</span>
+							on <span id="updatedDate"> <h:outputText
+									value="#{viewProfileBean.appEntity.commentedDate}">
+									<f:convertDateTime pattern="MM/dd/yyyy" />
+								</h:outputText>
+							</span> )
+						</div>
+
+						<div class="update4" id="commentsNew">
+							<h:outputText id="outputcomments"
+								value="#{viewProfileBean.appEntity.comments}" />
+
+							&nbsp;&nbsp;
+						</div>
+						<div class="update5">
+							<h:outputLink value="javascript:void(0)"
+								styleClass="btn btn-warning" onclick="editStatus()">
+								<h:outputText value="Edit" />
+							</h:outputLink>
+
+						</div>
+					</div>
+
+
+					<!--  update section -->
+					<div class="wrapper" id="updateStatus">
+						<div class="update1">Application Status:</div>
+						<div class="update2">
+							<h:selectOneMenu id="status"
+								value="#{viewProfileBean.appEntity.status}">
+								<f:selectItems value="#{viewProfileBean.applicationStatusEnums}"
+									var="aps" itemLabel="#{aps.desc}" itemValue="#{aps.desc}" />
+							</h:selectOneMenu>
+						</div>
+
+						<div class="update3">Comments</div>
+						<div class="update4">
+							<h:inputTextarea rows="4" cols="35" id="comments" maxlength="300"
+								validatorMessage="Maximum length is 300 characters"
+								value="#{viewProfileBean.appEntity.comments}">
+								<f:validateLength maximum="300" />
+							</h:inputTextarea>
+							<h:message for="comments" id="mymsg" style="color:red; " />
+							<span id="errormsg" style="color: red;"></span> &nbsp;&nbsp;
+						</div>
+						<div class="update5">
+							<h:commandLink value="Save" styleClass="btn btn-success">
+								<f:ajax execute="comments status"
+									listener="#{viewProfileBean.updateStatusAndComments}"
+									onevent="processAjax" render="" />
+							</h:commandLink>
+
+							&nbsp;
+							<h:outputLink value="javascript:void(0)"
+								styleClass="btn btn-info" onclick="cancelEdit()">
+								<h:outputText value="Cancel" />
+							</h:outputLink>
+
+						</div>
+					</div>
+
+
+					<br />
+
+
+
+					<!--   Start button -->
+					<br />
+					<br />
+					<div class="wrapper">
+						<hr />
+						<div>
+							
+							<c:if test="#{empty viewProfileBean.queryApp}">
+							<!--  back to application list page -->
+							<h:link value="Back To Application List"
+								outcome="/jobadmin/applicationlist" styleClass="btn btn-info"
+								style="display: inline-block;margin-left:400px;">
+								<f:param name="jobId" value="#{viewProfileBean.jobId}" />
+								<f:param name="jobTitle" value="#{viewProfileBean.jobTitle}" />
+								<f:param name="jobNumber" value="#{viewProfileBean.jobNumber}" />
+							</h:link>
+							</c:if>
+
+							<c:if test="#{not empty viewProfileBean.queryApp}">
+							<!--  back to search applicant result page -->
+							<h:link value="Back To Search Result"
+								outcome="/jobadmin/searchapplicants" styleClass="btn btn-info"
+								style="display: inline-block;margin-left:400px;">
+								<f:param name="queryApp" value="#{viewProfileBean.queryApp}" />
+							</h:link>
+							</c:if>
+							&nbsp;&nbsp;
+
+							<h:link value="Forward To" outcome="/jobadmin/forward"
+								styleClass="btn btn-success" style="display: inline-block;">
+								<f:param name="jobId" value="#{viewProfileBean.jobId}" />
+								<f:param name="jobTitle" value="#{viewProfileBean.jobTitle}" />
+								<f:param name="jobNumber" value="#{viewProfileBean.jobNumber}" />
+								<f:param name="appId" value="#{viewProfileBean.appEntity.appId}" />
+								<f:param name="queryApp" value="#{viewProfileBean.queryApp}" />
+							</h:link>
+						</div>
+
+					</div>
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+
+	<script type="text/javascript">
+		//for download, from primeFaces
+		function start() {
+			PF('statusDialog').show();
+		}
+
+		function stop() {
+			PF('statusDialog').hide();
+		}
+
+		function processAjax(data) {
+
+			if (data.status === 'success') {
+				//alert("data type="+data.type+"; data.source="+data.source+"; resposeText="+data.responseText);
+				
+				var com = $('#applicantProfile\\:comments').val();
+				length = com.length;
+				//alert("length="+length +"; cvalue="+com +"; current User="+ $('#applicantProfile\\:currentViewer').val());
+
+				if (length > 300) {
+					$('#errormsg').html("Maximum length is 300 characters");
+					return;
+				}
+
+				var newStatus = $('#applicantProfile\\:status').val();
+				var newComments = $('#applicantProfile\\:comments').val();
+				//alert("newStatus="+newStatus+"; newComments="+newComments);
+				showEdit("hide");
+
+				$('#applicantProfile\\:outputstatus').html(newStatus);
+				$('#applicantProfile\\:outputcomments').html(newComments);
+				//update commentedBy and commentedDate
+				$('#updatedBy').html(
+						$('#applicantProfile\\:currentViewer').val());
+
+				//get today's date with format MM/dd/yyyy
+				var fullDate = new Date()
+				var twoDigitMonth = (fullDate.getMonth() + 1) + "";
+				if (twoDigitMonth.length == 1) {
+					twoDigitMonth = "0" + twoDigitMonth;
+				}
+				var twoDigitDate = fullDate.getDate() + "";
+				if (twoDigitDate.length == 1) {
+					twoDigitDate = "0" + twoDigitDate;
+				}
+				var currentDate = twoDigitMonth + "/" + twoDigitDate + "/"
+						+ fullDate.getFullYear();
+
+				//alert("currentDate="+currentDate);
+				$('#updatedDate').html(currentDate);
+			}
+		}
+
+		function editStatus() {
+			//alert("editStatus called");
+			showEdit("edit");
+			return false;
+		}
+
+		function cancelEdit() {
+			showEdit("hide");
+		}
+
+		function showEdit(value) {
+			//alert("showEdit called value="+value);
+			if (value == "edit") {
+				document.getElementById("updateStatus").style.display = 'block';
+				document.getElementById("displayStatus").style.display = 'none';
+			} else {
+				document.getElementById("updateStatus").style.display = 'none';
+				document.getElementById("displayStatus").style.display = 'block';
+			}
+		}
+
+		$(document).ready(function() {
+			document.getElementById("updateStatus").style.display = 'none';
+		});
+	</script>
+</h:body>
+</html>

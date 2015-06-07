@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition template="../templates/job/commonadmin.xhtml">
+		<!-- pass parameter -->
+		<ui:param name="title" value="Add/Edit Job" />
+
+		<ui:define name="content">
+			<div id="add-edit-form">
+				<h3>
+					<h:outputText value="Add a new job"
+						rendered="#{addEditJobBean.jobEntity.jobId eq 0}" />
+					<h:outputText value="Edit job"
+						rendered="#{addEditJobBean.jobEntity.jobId gt 0}" />
+				</h3>
+				<p>
+					<span style="color: red">*</span>: required field. Email To is email addresses where 
+					applicants' applications will be sent to when they submit applications.
+					Use comma "," to separate email address for multiple recipients.
+					If no "Email To" is specified, uploaded resumes will not be sent to any one, just stored in repository.
+				</p>
+				<hr />
+				<h:form id="jobForm">
+
+					<!-- store jobId -->
+					<h:inputHidden id="jobId" value="#{addEditJobBean.jobEntity.jobId}" />
+
+					<h:panelGrid id="grid" columns="3" cellpadding="5"
+						styleClass="formGrid">
+
+						<h:outputLabel for="jobNumber" value="Job Number: " />
+						<h:inputText id="jobNumber" size="50" maxlength="30"
+							value="#{addEditJobBean.jobEntity.jobNumber}"></h:inputText>
+						<h:message for="jobNumber" />
+
+						<h:outputLabel for="jobTitle" value="Job Title: "
+							styleClass="required" />
+						<h:inputText id="jobTitle" size="50" maxlength="70"
+							validatorMessage="Job Title is required, at least 4 characters"
+							required="true" requiredMessage="Job Title is required, at least 4 characters"
+							value="#{addEditJobBean.jobEntity.jobTitle}">
+							<f:validateLength minimum="4" maximum="70" />
+						</h:inputText>
+						<h:message for="jobTitle" style="color:red" />
+
+						<h:outputLabel for="jobCategory" value="Job Category: " />
+						<h:inputText id="jobCategory" size="50" maxlength="70"
+							value="#{addEditJobBean.jobEntity.jobCategory}">
+						</h:inputText>
+						<h:message for="jobCategory" />
+
+						<h:outputLabel for="jobType" value="Job Type: "
+							styleClass="required" />
+
+						<!--  No need to use valueChangeListener, change to js code
+						<h:selectOneMenu id="jobType"
+							value="#{addEditJobBean.jobEntity.jobType}" onchange="submit()"
+							valueChangeListener="#{addEditJobBean.jobTypeChanged}">
+							<f:selectItems value="#{addEditJobBean.jobTypeMap}" />
+						</h:selectOneMenu>
+						-->
+						<h:selectOneMenu id="jobType"
+							value="#{addEditJobBean.jobEntity.jobType}" >
+							<!--  change to use enum
+							<f:selectItems value="#{addEditJobBean.jobTypeMap}" />
+							-->
+							<f:selectItems value="#{addEditJobBean.jobTypeEnums}" var="jt"
+   								itemLabel="#{jt.desc}" itemValue="#{jt.desc}"/>
+							
+						</h:selectOneMenu>
+						<h:message for="jobType" />
+
+						<h:outputLabel id="conLabel" for="contractDuration"
+							value="Duration: " />
+						<h:inputText id="contractDuration" size="50" maxlength="80"
+							value="#{addEditJobBean.jobEntity.contractDuration}">
+						</h:inputText>
+						<h:message id="conMessage" for="contractDuration" />
+
+						<h:outputLabel for="location" value="Job Location: "
+							styleClass="required" />
+						<h:inputText id="location" size="50" maxlength="100"
+							validatorMessage="Location is required, at least 2 characters"
+							required="true" requiredMessage="Location is required, at least 2 characters"
+							value="#{addEditJobBean.jobEntity.location}">
+							<f:validateLength minimum="2" maximum="100" />
+						</h:inputText>
+						<h:message for="location" style="color:red" />
+
+						<h:outputLabel for="aboutCompany" value="About Company: " />
+						<h:inputTextarea rows="8" cols="52" id="aboutCompany"
+							maxlength="800"
+							validatorMessage="Maximum length is 800 characters"
+							value="#{addEditJobBean.jobEntity.aboutCompany}">
+							<f:validateLength maximum="800" />
+						</h:inputTextarea>
+						<h:message for="aboutCompany" style="color:red" />
+
+						<h:outputLabel for="jobDesc" value="Job Description: "
+							styleClass="required" />
+						<h:inputTextarea rows="10" cols="52" id="jobDesc" maxlength="1500"
+							validatorMessage="Maximum length is 1500 characters"
+							required="true" requiredMessage="Job description is required"
+							value="#{addEditJobBean.jobEntity.jobDesc}">
+							<f:validateLength minimum="4" maximum="1500" />
+						</h:inputTextarea>
+						<h:message for="jobDesc" style="color:red" />
+
+						<h:outputLabel for="responsibility" value="Responsibilities: " />
+						<h:inputTextarea rows="8" cols="52" id="responsibility"
+							maxlength="1500"
+							validatorMessage="Maximum length is 1500 characters"
+							value="#{addEditJobBean.jobEntity.responsibility}">
+							<f:validateLength maximum="1500" />
+						</h:inputTextarea>
+						<h:message for="responsibility" style="color:red" />
+
+						<h:outputLabel for="qualification" value="Qualifications: "
+							styleClass="required" />
+						<h:inputTextarea rows="10" cols="52" id="qualification"
+							maxlength="1500"
+							validatorMessage="Maximum length is 1500 characters"
+							required="true" requiredMessage="Qualifications is required"
+							value="#{addEditJobBean.jobEntity.qualification}">
+							<f:validateLength minimum="4" maximum="1500" />
+						</h:inputTextarea>
+						<h:message for="qualification" style="color:red" />
+
+						<h:outputLabel for="education" value="Education: " />
+						<h:inputText id="education" size="50" maxlength="150"
+							validatorMessage="Maximum length is 150 characters"
+							value="#{addEditJobBean.jobEntity.education}">
+						</h:inputText>
+						<h:message for="education" style="color:red" />
+
+						<h:outputLabel for="preferredSkill" value="Preferred Skills: " />
+						<h:inputTextarea rows="8" cols="52" id="preferredSkill"
+							maxlength="1000"
+							validatorMessage="Maximum length is 1000 characters"
+							value="#{addEditJobBean.jobEntity.preferredSkill}">
+							<f:validateLength maximum="1000" />
+						</h:inputTextarea>
+						<h:message for="preferredSkill" style="color:red" />
+
+						<h:outputLabel for="benefit" value="Benefits: " />
+						<h:inputTextarea rows="5" cols="52" id="benefit" maxlength="800"
+							validatorMessage="Maximum length is 800 characters"
+							value="#{addEditJobBean.jobEntity.benefit}">
+							<f:validateLength maximum="800" />
+						</h:inputTextarea>
+						<h:message for="benefit" style="color:red" />
+
+						<h:outputLabel for="note" value="Other Notes: " />
+						<h:inputTextarea rows="5" cols="52" id="note" maxlength="500"
+							validatorMessage="Maximum length is 500 characters"
+							value="#{addEditJobBean.jobEntity.note}">
+							<f:validateLength maximum="500" />
+						</h:inputTextarea>
+						<h:message for="note" style="color:red" />
+
+						<h:outputLabel for="emailTo" value="Eamil To: (use comma separate emails)" 
+						 style="width:120px"/>
+						<h:inputText  id="emailTo" size="50" maxlength="300"
+							validatorMessage="Maximum length is 300 characters"
+							value="#{addEditJobBean.jobEntity.emailTo}">
+							<f:validateLength maximum="300" />
+						</h:inputText>
+						<h:message for="emailTo" style="color:red" />
+
+					</h:panelGrid>
+
+					<br />
+					<h:commandLink action="#{addEditJobBean.preview}" value="Preview"
+						style="margin-left:195px" styleClass="btn btn-info" target="_new">
+					</h:commandLink>
+					
+					&nbsp;&nbsp;
+					<h:commandButton value="Save Only" styleClass="btn btn-success"
+						action="#{addEditJobBean.addUpdateJob(false)}" update="grid"
+						alt="save the job only, publish it later" 
+						onclick="return confirm('Save Only does not publish the job to applicants, you may change it in Manage Job tab later. Continue?')"/>
+						&nbsp;&nbsp;
+					<h:commandButton value="Save &amp; Publish"
+						styleClass="btn btn-primary"
+						action="#{addEditJobBean.addUpdateJob(true)}" update="grid"
+						alt="Save the job and publish to applicants" />
+
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+
+	<script>
+		$(document).ready(function() {
+			var jobtype = document.getElementById("jobForm:jobType");
+			//alert("onload jobType=" + jobtype.value);
+			showContractDuration(jobtype.value);
+
+			$("#jobForm\\:jobType").change(function() {
+				//alert("onchange jobtype=" + this.value);
+				showContractDuration(this.value);
+			});
+			
+		});
+
+		function showContractDuration(typeValue) 
+		{
+			if (typeValue != "Full Time") {
+				//alert("show");
+				document.getElementById("jobForm:conLabel").style.display = 'block';
+				document.getElementById("jobForm:contractDuration").style.display = 'block';
+				document.getElementById("jobForm:conMessage").style.display = 'block';
+				//alert("completed show");
+			} else {
+				//alert("hide");
+				document.getElementById("jobForm:conLabel").style.display = 'none';
+				document.getElementById("jobForm:contractDuration").style.display = 'none';
+				document.getElementById("jobForm:conMessage").style.display = 'none';
+				//alert("complete hide");
+			}
+
+		}
+	</script>
+</h:body>
+</html>

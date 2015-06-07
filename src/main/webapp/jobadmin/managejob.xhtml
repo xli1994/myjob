@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:head>
+
+</h:head>
+
+<h:body>
+
+	<ui:composition template="../templates/job/commonadmin.xhtml">
+		<!-- pass parameter -->
+		<ui:param name="title" value="Manage Job Posting" />
+
+		<ui:define name="content">
+			<div id="job-list">
+				<c:if test="#{empty manageJobListBean.jobList}">
+				<p>There is no job available, please click Add/Edit tab to add job</p>
+				</c:if>
+			
+				<c:if test="#{not empty manageJobListBean.jobList}">	
+				
+				
+				<p>Note: Click available header link to sort; Click job title link to view job description; Click Applicants number to view Applicants;
+				Active Status: click Active or Inactive to deactivate or activate the job
+				</p>
+
+				<h:form id="adminJobList">
+					<h:dataTable value="#{manageJobListBean.jobList}" var="jobEntity"
+						styleClass="jobListTable" headerClass="jobListTableHeader"
+						rowClasses="jobListTableOddRow,jobListTableEvenRow"
+						captionClass="jobListTableCaption"
+						binding="#{myTable}">
+
+						<f:facet name="caption">
+							<h:outputText value="Job Postings" />
+						</f:facet>
+
+						<h:column>
+							<h:selectBooleanCheckbox
+								value="#{manageJobListBean.checked[jobEntity.jobId]}" />
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">
+								<h:commandLink action="#{manageJobListBean.sortByJobNumber}">
+									Job Code
+								</h:commandLink>
+							</f:facet>
+							
+							<h:outputText value="#{jobEntity.jobNumber}" />
+							<!-- Test binding myTable: works, comment out  
+							rowCount: <h:outputText value="#{myTable.rowCount}" />
+							rowIndex: <h:outputText value="#{myTable.rowIndex}" />
+							first: <h:outputText value="#{myTable.first}" />
+							rows: <h:outputText value="#{myTable.rows}" />
+							-->
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">
+								<h:commandLink action="#{manageJobListBean.sortByJobTitle}">
+									Job Title
+								</h:commandLink>
+							</f:facet>
+							<h:link value="#{jobEntity.jobTitle}" outcome="preview">
+								<f:param name="jobId" value="#{jobEntity.jobId}" />
+							</h:link>
+
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:commandLink action="#{manageJobListBean.sortByPostDate}">
+									Post Date
+								</h:commandLink>
+							</f:facet>
+
+							<h:outputText value="#{jobEntity.createdDate}">
+								<f:convertDateTime pattern="MM/dd/yyyy" />
+							</h:outputText>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">Applicants</f:facet>
+							<h:outputText value="#{jobEntity.applicantNumber}"
+								rendered="#{jobEntity.applicantNumber == 0}" />
+								
+							<h:link value="#{jobEntity.applicantNumber} View" outcome="applicationlist"
+								rendered="#{jobEntity.applicantNumber gt 0}">
+								<f:param name="jobId" value="#{jobEntity.jobId}" />
+								<f:param name="jobTitle" value="#{jobEntity.jobTitle}" />
+								<f:param name="jobNumber" value="#{jobEntity.jobNumber}" />
+							</h:link>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:commandLink action="#{manageJobListBean.sortByJobStatus}">
+									Active Status
+								</h:commandLink>
+							</f:facet>
+							
+							<!--  
+							<h:outputText value="A &nbsp;" styleClass="publish"
+								rendered="#{jobEntity.activeStatus}" />
+							-->
+							<h:commandButton value="Active"
+								action="#{manageJobListBean.updateJobStatus(false)}"
+								onclick="return confirm('Are you sure to deactivate this job?')"
+								styleClass="btn btn-success btn-me" rendered="#{jobEntity.activeStatus}" 
+								style="width:75px;">
+								<f:setPropertyActionListener target="#{manageJobListBean.targetJobId}" value="#{jobEntity.jobId}" />
+							</h:commandButton>
+
+							<!--  
+							<h:outputText value="I &nbsp;&nbsp;&nbsp;" style="font-weight: bold;"
+								rendered="#{not jobEntity.activeStatus}" />
+							-->
+							<h:commandButton value="Inactive"
+								action="#{manageJobListBean.updateJobStatus(true)}"
+								styleClass="btn btn-warning btn-me" rendered="#{not jobEntity.activeStatus}" >
+								<f:setPropertyActionListener target="#{manageJobListBean.targetJobId}" value="#{jobEntity.jobId}" />
+								</h:commandButton>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header"></f:facet>
+
+							<h:link value="Replicate" outcome="addeditjob"
+								styleClass="btn btn-primary btn-me">
+								<f:param name="jobId" value="#{jobEntity.jobId}" />
+								<f:param name="rep" value="true" />
+							</h:link>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header"></f:facet>
+
+							<h:link value="Edit" outcome="addeditjob"
+								styleClass="btn btn-info btn-me">
+								<f:param name="jobId" value="#{jobEntity.jobId}" />
+							</h:link>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header"></f:facet>
+							<h:commandButton value="Delete"
+								action="#{manageJobListBean.deleteJob(jobEntity)}"
+								onclick="return confirm('Are you sure?')"
+								styleClass="btn btn-danger btn-me" />
+
+						</h:column>
+					</h:dataTable>
+
+					<br />
+
+					<!-- Common buttons -->
+					<h:link value="Add new job" outcome="addeditjob"
+						styleClass="btn btn-success" />
+		 				&nbsp;&nbsp;&nbsp; 
+		
+					<h:commandButton value="Delete all selected jobs"
+						styleClass="btn btn-danger"
+						action="#{manageJobListBean.deleteBatchJobs}"
+						onclick="return confirm('Are you sure to delete all selected jobs?')" /> &nbsp;&nbsp;&nbsp; 
+		
+				<br> </br>
+
+
+				</h:form>
+
+				</c:if>
+				
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
