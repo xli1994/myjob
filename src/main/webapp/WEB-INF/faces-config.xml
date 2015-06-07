@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+        http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+	version="2.2">
+
+	<!-- declare message bundle for global usage, for local usage , see individual page
+	This file needs to be saved and referenced in a package, which would normally be in the same
+	 place as your source code -->
+	<application>
+
+		<!-- see generalConfig.properties in resources/, it specifies solr properties and fileupload dir -->
+		<resource-bundle>
+			<base-name>generalConfig</base-name>
+			<var>config</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.lxs.validationMessages</base-name>
+			<var>validatorMsg</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.lxs.emailMessages</base-name>
+			<var>emailTemplate</var>
+		</resource-bundle>
+	</application>
+
+	<!-- register jsf lifcycle listener -->
+	<lifecycle>
+		<phase-listener>com.lxs.web.servlets.LifeCycleListener</phase-listener>
+	</lifecycle>
+
+	<!-- Register exception factory to handle all exceptions -->
+	<factory>
+		<exception-handler-factory>com.lxs.web.controllerbeans.job.exceptions.ExceptionHandlerFactoryImpl</exception-handler-factory>
+	</factory>
+
+</faces-config>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>#{title}</title>
+
+	<!-- Add bootstrtap -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+	<!-- Optional theme -->
+
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" />
+
+	<!-- jQuery library -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+	<!-- jQuery UI not useful, comment out -->
+	<!-- 
+	<link rel="stylesheet"
+		href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"/>
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	-->
+					
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+
+
+	<!-- My css -->
+	<h:outputStylesheet library="css" name="common.css" />
+	<h:outputStylesheet library="css" name="formGeneral.css" />
+	<h:outputStylesheet library="css" name="publicJobListStyle.css" />
+	<h:outputStylesheet library="css" name="applyJobForm.css" />
+	
+	<script>
+	/*
+		$(document).ready(function() {
+			//alert("location.pathname=" + location.pathname);
+			$item = $('#public-navigation li a').filter(function() {
+				//alert("called? location.pathname=" + $(this).prop('href'));
+				return $(this).prop('href').indexOf(location.pathname) != -1;
+				//$(this).addClass("current");
+
+				//$("a[href*='" + location.pathname + "']").addClass("current");
+			});
+			$item.addClass("publicCurrent");
+
+		});
+	*/
+	</script>
+</h:head>
+<h:body id="public-commonbody">
+	<!-- Use ui:insert and ui:include tag to include header/footer and content file in template file.
+ Name each section in ui:insert tag.
+"name" attribute of ui:insert tag will be used to replace contents of corresponding section. 
+"name" is used by other pages that will "define" the content, eg, in temp1.xhtml,
+call ui:define name="header", it will replace content in header.xhtml
+-->
+
+	<div id="header">
+		<ui:insert name="header">
+			<ui:include src="header.xhtml">
+				<ui:param name="defaultHeader1" value="Parameter Header 1" />
+				<ui:param name="defaultHeader2" value="Parameter Header 2" />
+			</ui:include>
+		</ui:insert>
+	</div>
+
+	<div id="public-navigation">
+		<ui:include src="publicNavigation.xhtml" />
+	</div>
+
+	<div id="public-content">
+		<ui:insert name="content">
+			<ui:include src="publicContents.xhtml" />
+		</ui:insert>
+	</div>
+
+	<div id="footer">
+		<ui:include src="footer.xhtml" />
+	</div>
+</h:body>
+</html>
