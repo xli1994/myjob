@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence 
+http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+	<!-- use Hibernate imple -->
+	<persistence-unit name="my-hibernate-jpa" transaction-type="RESOURCE_LOCAL">
+		<description>My Hibernate Persistence Unit</description>
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		
+		<!-- test use jndi to get container datasource: works -->
+		<non-jta-data-source>java:comp/env/jdbc/mysqldb</non-jta-data-source>
+
+		<validation-mode>CALLBACK</validation-mode>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<!-- This batch size is used for batch insert, can't be too big, will lead to OutOfMemory -->
+			<property name="hibernate.jdbc.batch_size" value="50"/> 
+			<!-- This is used for dynamic turn off show sql, see note in 
+			F:\Java_study\tomcat_setup\tomcatEE_setup.txt
+			<property name ="hibernate.show_sql" value = "${show_sql}" />
+			-->
+			<property name ="hibernate.show_sql" value = "true" />
+		</properties>
+	</persistence-unit>
+
+
+	<persistence-unit name="my-jpa" transaction-type="RESOURCE_LOCAL">
+		<description>My Persistence Unit(EclipseLink)</description>
+		
+		<!-- see http://www.eclipse.org/eclipselink/documentation/2.5/solutions/testingjpa002.htm  -->
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<!-- test use jndi to get container datasource: works -->
+		<non-jta-data-source>java:comp/env/jdbc/mysqldb</non-jta-data-source>
+
+		<exclude-unlisted-classes>false</exclude-unlisted-classes> 
+		
+		
+		<!-- not useful here, see http://www.objectdb.com/java/jpa/entity/persistence-unit
+		<mapping-file>META-INF/mappingFile.xml</mapping-file>
+		<jar-file>packedEntity.jar</jar-file>
+		
+		<class>sample.MyEntity1</class>
+		<class>sample.MyEntity2</class>
+		-->
+
+		<properties>
+			<!--  this works, but use above jndi to get datasource from web container
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/xxxxx" />
+			<property name="javax.persistence.jdbc.user" value="xxxxx" />
+			<property name="javax.persistence.jdbc.password" value="xxxxx" />
+			-->
+
+			<!-- These for EclipseLink, only use target-database -->
+			<property name="eclipselink.target-database" value="MySQL" />
+			<!--  
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.ddl-generation.output-mode" value="database" />
+			<property name="eclipselink.target-server" value="JBoss" />
+			<property name="eclipselink.weaving" value="false" />
+			-->
+			
+			<!-- Set update batch size -->
+			<property name="eclipselink.jdbc.batch-writing.size" value="100" />
+			
+			<!-- EclipseLink JPA sql log -->
+			<property name="eclipselink.logging.level" value="INFO" />
+			<property name="eclipselink.logging.level.sql" value="FINE" />
+			<property name="eclipselink.logging.parameters" value="true" /> <!-- if false, it disable sql log -->
+		</properties>
+	</persistence-unit>
+</persistence>
